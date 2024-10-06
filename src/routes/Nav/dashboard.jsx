@@ -5,31 +5,34 @@ import ReceiptOutlinedIcon from '@mui/icons-material/ReceiptOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 
+import { Link } from 'react-router-dom';
+
 const navLinks = [
     {
-        name: 'Profile',
-        urlLink: '',
+        name: 'Users',
+        urlLink: '/',
         icon: <PersonOutlineOutlinedIcon sx={{color: 'white', fontSize:30}}/>
     },
     {
         name: 'Certificate',
-        urlLink: '',
+        urlLink: '/certificate',
         icon: <WorkspacePremiumOutlinedIcon sx={{color: 'white', fontSize:30}} />
     },
     {
         name: 'Receipt',
-        urlLink: '',
+        urlLink: '/receipt',
         icon: <ReceiptOutlinedIcon sx={{color: 'white', fontSize:30}} />
     },
     {
-        name: 'TaxApp',
-        urlLink: '',
+        name: 'Revenue',
+        urlLink: '/revenue',
         icon: <ReceiptLongOutlinedIcon sx={{color: 'white', fontSize:30}} />
     }
 ]
 
 
 const Nav = () => {
+
     return (
         <div className="bg-gradient-to-b from-blue-700 to-blue-900 p-2 grid grid-col-5 gap-3 col-span-1">
             <div className="col-span-3 flex items-center px-6 gap-2">
@@ -42,7 +45,7 @@ const Nav = () => {
                     return (
                         <div className="flex gap-4" key={element.name} >
                             <span>{element.icon} </span>
-                            <span className="font-sans text-white text-xl font-normal">{element.name}</span>
+                            <Link className={"font-sans text-white text-xl font-normal"} to={element.urlLink}>{element.name}</Link>
                         </div>
                    )
                 })

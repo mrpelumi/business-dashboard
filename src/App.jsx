@@ -1,42 +1,62 @@
 import './App.css'
 import './index.css'
+import { Routes, Route } from 'react-router-dom'
+import {useEffect} from 'react';
 
-import Nav from './components/Nav/dashboard'
-import SearchInput from './components/searchInput/searchInput.component'
-import SearchButton from './components/searchButton/searchButton.component'
+import {useDispatch} from 'react-redux';
+
+import Home from './routes/Home/home'
+import Profile from './routes/Profile/profile'
+import Certificate from './routes/Certificate/certificate'
+import Receipt from './routes/Receipt/receipt'
+import Revenue from './routes/Revenue/revenue'
+
+import { setCertReducer } from './store/certReducer/certificate.reducer';
+import { setReceiptReducer } from './store/receiptReducer/receipt.reducer';
+import { setRevenueReducer } from './store/revenueReducer/revenue.reducer';
+
+import { getDocCert, getDocRevenue } from './utils/firebase';
+import { getDocReceipt } from './utils/firebase';
 
 function App() {
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const certificates = async () => {
+      const qcert = await getDocCert();
+      const qCertList = []
+      qcert.docs.forEach(element => qCertList.push(element.data()))
+      dispatch(setCertReducer(qCertList))
+    }
+
+    const receipts = async () => {
+      const qReceipt = await getDocReceipt();
+      const qReceiptList = []
+      qReceipt.docs.forEach(element => qReceiptList.push(element.data()))
+      dispatch(setReceiptReducer(qReceiptList))
+    }
+
+    const revenue = async () => {
+      const qRevenue = await getDocRevenue();
+      const qRevenueList = [];
+      qRevenue.docs.forEach(element => qRevenueList.push(element.data()))
+      dispatch(setRevenueReducer(qRevenueList))
+    }
+    certificates();
+    receipts();
+    revenue();
+  }, [])
+
   return (
-    <div className='grid grid-cols-5 gap-2 h-screen'>
-      <Nav />
-      <div className='p-6 border-black border-2 col-span-4 flex flex-col gap-6'>
-        <div className='flex justify-between'>
-          <div className='flex flex-col gap-1'>
-            <span className='font-medium text-2xl'>Welcome <span className='text-blue-700'>Admin</span></span>
-            <span className='text-sm text-gray-400'>Ondo Business Premises Management Platform</span>
-          </div>
-          <div className=''>
-            <span className='font-medium text-gray-600'>September 23, 2023</span>
-          </div>
-        </div>
-        <div className=''>
-          <span className='text-xl font-bold text-blue-950'>PROFILE</span>
-        </div>
-        <div className=''>
-          <div>
-            <span>Total Users: 234</span>
-          </div>
-          <div className=''>
-            <SearchInput />
-            <SearchButton />
-          </div>
-        </div>
-        <div>
-          <span>A table will be here</span>
-        </div>
-      </div>
-    </div>
+    <Routes>
+      <Route path='/' element={<Home />}>
+        <Route index element={<Profile />} /> 
+        <Route path='/certificate' element={<Certificate />} />
+        <Route path='/receipt' element={<Receipt />} />
+        <Route path='/revenue' element={<Revenue />} />
+      </Route>
+    </Routes>
   )
 }
 
