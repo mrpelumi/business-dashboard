@@ -5,6 +5,7 @@ import Tables from "../../components/dataTable/dataTable";
 import Card from "../../components/Card/card";
 
 import { selectCertItem } from "../../store/certReducer/certificate.selector";
+import {getISOWeek} from 'date-fns';
 
 
 import { useState, useEffect } from "react";
@@ -18,7 +19,7 @@ const Certificate = () => {
   const [monthCertNo, setMonthCertNo] = useState(0);
   const [totalCertNo, setTotalCertNo] = useState(0);
   const [dayCertNo, setDayCertNo] = useState(0);
-  const [week, setWeek] = useState("");
+  const [weekCertNo, setWeekCertNo] = useState(0);
   const [certItems, setCertItems] = useState([]);
 
   const [filters, setFilters] = useState({
@@ -27,214 +28,27 @@ const Certificate = () => {
 
   const [searchTxt, setSearchTxt] = useState("");
 
-  const products = [
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '2',
-      name: 'NNPC',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '3',
-      name: 'Dangote',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '4',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '5',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '6',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '7',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Global Enterprise',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Institution',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Bukven Communications',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Bukven Hotel',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Bukven Gardens',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-  ]
-
   const columns = [
     {
-      field:"id",
-      header:"id"
+      field:"certificateNo",
+      header:"Certificate No"
     },
     {
-      field:"name",
-      header:"Name"
+      field:"busName",
+      header:"Business Name"
     },
     {
-      field:"item",
-      header:"Item"
-    },
-    {
-      field:"status",
-      header:"Status"
+      field:"taxAppId",
+      header:"Receipt ID"
     }
   ]
 
   useEffect(() => {
     const today = new Date();
-    const thisYear = today.getFullYear()
+    // const thisYear = today.getFullYear()
     const thisMonth = today.getMonth() + 1;
     const thisDate = today.getDate();
-    // const thisDay = today.get();
+    const thisWeek = getISOWeek(today);
     const allCertList = []
 
     // create cert list this is using receipt value
@@ -244,22 +58,29 @@ const Certificate = () => {
     console.log(allCertList)
     // set month cert no
     const monthCertList = allCertList.filter(element => {
-      const monthVal = Number(element.date.split("/")[1])
-      return monthVal === 9
+      const monthDateVal = element.createdAt.toDate()
+      const monthVal = monthDateVal.getMonth() + 1;
+      return monthVal === thisMonth
     })
 
     // set week cert no
-    // const weekCertList = allCertList.
+    const weekCertList = allCertList.filter(element => {
+      const weekDateVal = element.createdAt.toDate()
+      const weekVal = getISOWeek(weekDateVal)
+      return weekVal === thisWeek
+    })
 
     // set day cert no
-    const dayCertList = allCertList.filter(element => {
-      const dayVal = Number(element.date.split("/")[0])
-      return dayVal === 4
+    const dayCertList = monthCertList.filter(element => {
+      const dayDateVal = element.createdAt.toDate()
+      const dayVal = dayDateVal.getDate();
+      return dayVal === thisDate
     })
     
     setCertItems(allCertList);
     setTotalCertNo(allCertList.length)
     setMonthCertNo(monthCertList.length)
+    setWeekCertNo(weekCertList.length)
     setDayCertNo(dayCertList.length)
   }, [])
 
@@ -280,7 +101,7 @@ const Certificate = () => {
       </div>
       <div className="flex gap-20">
         <Card bgColor={"bg-cyan-600"} title={"Certificate This Month"} value={monthCertNo} />
-        <Card bgColor={"bg-violet-700"} title={"Certificate This Week"} value={100} />
+        <Card bgColor={"bg-violet-700"} title={"Certificate This Week"} value={weekCertNo} />
         <Card bgColor={"bg-green-600"} title={"Certificate This Day"} value={dayCertNo} />
       </div>
       <div className='flex justify-between'>
@@ -294,7 +115,7 @@ const Certificate = () => {
           </div>
         </div>
         <div className='border-2 border-gray-400 rounded-md'>
-          <Tables products={products} columns={columns} filters={filters} />
+          <Tables products={certItems} columns={columns} filters={filters} />
           {/* <Button type="button" icon="pi pi-file" rounded onClick={() => exportCSV(false)} data-pr-tooltip="CSV" /> */}
         </div>
     </div>

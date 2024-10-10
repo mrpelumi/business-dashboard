@@ -1,7 +1,6 @@
 import Card from "../../components/Card/card";
 import { useState, useEffect } from "react";
 
-import {Data} from '../../Data.js'
 import Chart  from "chart.js/auto";
 import {CategoryScale} from "chart.js"
 import BarChart from "../../components/BarChart/barChart.jsx";
@@ -12,16 +11,18 @@ import {selectRevenueItem} from '../../store/revenueReducer/revenue.selector.js'
 
 
 
+const chartDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+const dummyData = [70000, 50000, 30000, 20000, 10000]
+
 Chart.register(CategoryScale);
 
 const Revenue = () => {
-
   const [chartData, setChartData] = useState({
-    labels: Data.map((data) => data.day),
+    labels: chartDays.map((data) => data),
     datasets: [
       {
         // label: "Users Gained",
-        data: Data.map ((data) => data.amount),
+        data: dummyData.map((data) => data),
         backgroundColor: [
           "rgba(75,192,192,1)",
           "#50Af99",
@@ -42,11 +43,12 @@ const Revenue = () => {
 
   useEffect(() => {
     const today = new Date();
-    const thisYear = today.getFullYear()
+    // const thisYear = today.getFullYear()
     const thisMonth = today.getMonth() + 1;
     const thisDate = today.getDate();
     const thisWeek = getISOWeek(today);
-    const allRevenueList = []
+    const allRevenueList = [];
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     // create cert list this is using receipt value
     for (let element of Object.values(allRevenueObj)){
@@ -54,46 +56,65 @@ const Revenue = () => {
     }
 
     // console.log(allReceiptObj)
-    // set month cert no
+    // set month revenue no
     const monthRevenueList = allRevenueList.filter(element => {
-      const monthVal = Number(element.date.split("/")[1]) //add -1 later
-      return monthVal === 6
+      const monthVal = Number(element.date.split("-")[1]) 
+      return monthVal === thisMonth
     })
 
     // set total revenue month
     const initialValue = 0
 
     // total not a list in real firebase
-    const totalMonthRevenue = monthRevenueList.filter((element) => element.paymentStatus === true).map(element => Number(element.total[0])).reduce((prevEl, nextEl) => prevEl + nextEl, initialValue)   
+    const totalMonthRevenue = monthRevenueList.filter((element) => element.paymentStatus === true).map(element => Number(element.total)).reduce((prevEl, nextEl) => prevEl + nextEl, initialValue)   
 
     // set week revenue no
     const weekRevenueList = allRevenueList.filter(element => {
-      const newDate = element.date.split("/").reverse().join("-") //change / to - later
+      const newDate = element.date
       const weekVal = getISOWeek(new Date (newDate))
-      return weekVal === 23
+      return weekVal === thisWeek
     })
   
     // set total revenue week
-    const totalWeekRevenue = weekRevenueList.filter(element => element.paymentStatus === true).map(element => Number(element.total[0])).reduce((prevEl, nextEl) => prevEl + nextEl, initialValue)
+    const totalWeekRevenue = weekRevenueList.filter(element => element.paymentStatus === true).map(element => Number(element.total)).reduce((prevEl, nextEl) => prevEl + nextEl, initialValue)
 
     // set day revenue no
-    const dayRevenueList = allRevenueList.filter(element => {
-      const dayVal = Number(element.date.split("/")[0])
-      return dayVal === 4
+    const dayRevenueList = monthRevenueList.filter(element => {
+      const dayVal = Number(element.date.split("-")[2])
+      return dayVal === thisDate
     })
 
     // set total revenue day
-    const totalDayRevenue = dayRevenueList.filter(element => element.paymentStatus === true).map(element => Number(element.total[0])).reduce((prevEl, nextEl) => prevEl + nextEl, initialValue)
+    const totalDayRevenue = dayRevenueList.filter(element => element.paymentStatus === true).map(element => Number(element.total)).reduce((prevEl, nextEl) => prevEl + nextEl, initialValue)
+
+    // each week day for charts
+    const weekNo = weekRevenueList.map(element => element.date)
+    const uniqueDayList = Array.from(new Set(weekNo));
+    const eachDayObj = {}
+    const eachDayList = []
+    for (let element of uniqueDayList){
+      const currentDayNo = new Date(element)
+      const currentDayStr = daysOfWeek[currentDayNo.getDay()]
+      const totalEachDay = weekRevenueList.filter(item => element.split("-")[2] === item.date.split("-")[2]).map(element => Number(element.total)).reduce((prevEl, nextEl) => prevEl + nextEl,  initialValue);
+      eachDayObj[currentDayStr] = totalEachDay
+    }
+    for (let element of Object.keys(eachDayObj)){
+      if (element === "Monday") eachDayList[0] = eachDayObj[element]
+      else if (element === "Tuesday") eachDayList[1] = eachDayObj[element]
+      else if (element === "Wednesday") eachDayList[2] = eachDayObj[element]
+      else if (element === "Thursday") eachDayList[3] = eachDayObj[element]
+      else if (element === "Friday") eachDayList[4] = eachDayObj[element]
+    }
     
     setMonthRevenueAmount(totalMonthRevenue)
     setWeekRevenueAmount(totalWeekRevenue)
     setDayRevenueAmount(totalDayRevenue)
     setChartData({
-      labels: Data.map((data) => data.day),
+      labels: chartDays.map((data) => data),
       datasets: [
         {
-          // label: "Users Gained",
-          data: weekRevenueList.map(element => Number(element.total[0])),
+          // label: "Daily Amount",
+          data: eachDayList.map(element => element),
           backgroundColor: [
             "rgba(75,192,192,1)",
             "#50Af99",

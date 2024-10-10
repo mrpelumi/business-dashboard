@@ -5,8 +5,10 @@ import SearchInput from '../../components/searchInput/searchInput.component'
 import SearchButton from '../../components/searchButton/searchButton.component'
 import Tables from '../../components/dataTable/dataTable';
 
-import { useState } from 'react'
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react'
+
+import { useSelector } from 'react-redux';
+import { selectUserProfiles } from '../../store/userReducer/profile.selector';
 // import {exportCSV} from 'primereact/cs'
 
 const Profile = () => {
@@ -15,213 +17,41 @@ const Profile = () => {
     month:"long",
     day: "numeric"
   }
+  const [currentDate, setCurrentDate] = useState("");
+  const [searchTxt, setSearchTxt] = useState("");
+  const [totalProfileNo, setTotalProfileNo] = useState(0);
+  const [profileItems, setProfileItems] = useState([])
+  
+  const userProfilesObj = useSelector(selectUserProfiles);
 
   const [filters, setFilters] = useState({
     global: {value: null, matchMode:FilterMatchMode.CONTAINS }
   })
-  const [currentDate, setCurrentDate] = useState("");
-  const [searchTxt, setSearchTxt] = useState("");
-
-  // sample data
-  const products = [
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '1',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '2',
-      name: 'NNPC',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '3',
-      name: 'Dangote',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '4',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '5',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '6',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '7',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Global Enterprise',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Institution',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Bukven Communications',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Bukven Hotel',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Bukven Gardens',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-    {
-      id: '8',
-      name: 'Digital Business',
-      item: 'pizza',
-      status: 'sold'
-    },
-  ]
 
   const columns = [
     {
-      field:"id",
-      header:"Id"
+      field:"busName",
+      header:"Business Name"
     },
     {
-      field:"name",
-      header:"Name"
+      field:"email",
+      header:"Email"
     },
     {
-      field:"item",
-      header:"Item"
+      field:"phoneNo",
+      header:"Phone No"
     },
     {
-      field:"status",
-      header:"Status"
+      field:"busCommence",
+      header:"Commence Date"
+    }, 
+    {
+      field: "busAdd",
+      header: "Business Address"
+    },
+    {
+      field: "homeAdd",
+      header: "Home Address"
     }
   ]
 
@@ -229,6 +59,15 @@ const Profile = () => {
     const date = new Date();
     const trans_date = date.toLocaleDateString("en-US", options)
     setCurrentDate(trans_date);
+
+    const allProfilesList = []
+
+    for (let element of Object.values(userProfilesObj)){
+      allProfilesList.push(element)
+    }
+
+    setProfileItems(allProfilesList);
+    setTotalProfileNo(allProfilesList.length)
   }, [])
 
   const inputSearchHandler = (e) => {
@@ -258,7 +97,7 @@ const Profile = () => {
         <div className='flex justify-between'>
           <div className='shadow-md p-4 rounded-md flex flex-col gap-3 w-1/6'>
             <span className='text-sm text-gray-400 text-center'>Total Users</span>
-            <span className='text-2xl font-medium text-gray-800 text-center'>1000</span>
+            <span className='text-2xl font-medium text-gray-800 text-center'>{totalProfileNo}</span>
           </div>
           <div className='flex items-end px-4 gap-2'>
             <SearchInput value={filters} onChangeHandler={inputSearchHandler} />
@@ -266,7 +105,7 @@ const Profile = () => {
           </div>
         </div>
         <div className='border-2 border-gray-400 rounded-md'>
-          <Tables products={products} columns={columns} filters={filters}/>
+          <Tables products={profileItems} columns={columns} filters={filters}/>
           {/* <Button type="button" icon="pi pi-file" rounded onClick={() => exportCSV(false)} data-pr-tooltip="CSV" /> */}
         </div>
       </div>

@@ -55,13 +55,13 @@ const Receipt = () => {
 
   useEffect(() => {
     const today = new Date();
-    const thisYear = today.getFullYear()
+    // const thisYear = today.getFullYear()
     const thisMonth = today.getMonth() + 1;
     const thisDate = today.getDate();
     const thisWeek = getISOWeek(today);
     const allReceiptList = []
 
-    // create cert list this is using receipt value
+    // create receipt list 
     for (let element of Object.values(allReceiptObj)){
       if(element.paymentStatus === true){
         allReceiptList.push(element)
@@ -73,14 +73,14 @@ const Receipt = () => {
       return monthVal === thisMonth
     })
     
-    // set week cert no
+    // set week receipt no
     const weekReceiptList = allReceiptList.filter(element => {
-      const newDate = element.date.split("-") 
+      const newDate = element.date
       const weekVal = getISOWeek(new Date (newDate))
       return weekVal === thisWeek
     })
 
-    // set day cert no
+    // set day receipt no
     const dayReceiptList = monthReceiptList.filter(element => {
       const dayVal = Number(element.date.split("-")[2])
       return dayVal === thisDate

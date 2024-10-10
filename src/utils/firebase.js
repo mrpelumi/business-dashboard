@@ -1,6 +1,7 @@
 import {initializeApp} from "firebase/app";
 // import { onAuthStateChanged, setPersistence, browserSessionPersistence } from "firebase/auth";
 import {getFirestore, collection, getDocs} from "firebase/firestore";
+import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_SECURE_API_KEY,
@@ -13,17 +14,20 @@ const firebaseConfig = {
 
 // initialize firebase
 const app = initializeApp(firebaseConfig);
-
+const auth = getAuth(app);
 const db = getFirestore(app);
 
 // certificate document object
-const certRef = collection(db, "receipt");
+const certRef = collection(db, "certificate");
 
 // receipt document object
 const receiptRef  = collection(db, "receipt")
 
 // revenue document object
-const revenueRef = collection(db, "receipt")
+const revenueRef = collection(db, "taxApp")
+
+// user document object
+const userRef = collection(db, "userProfile")
 
 //get certificate document list
 export const getDocCert = async () =>{
@@ -34,13 +38,24 @@ export const getDocCert = async () =>{
 //get receipt document list
 export const getDocReceipt = async () => {
   const querySnapshot = await getDocs(receiptRef);
-
   return querySnapshot;
 }
 
 // get revenue document list
 export const getDocRevenue = async () => {
   const querySnapshot = await getDocs(revenueRef);
-
   return querySnapshot;
+}
+
+// get user document list
+export const getDocUserProfile = async () => {
+  const querySnapshot = await getDocs(userRef);
+  return querySnapshot;
+}
+
+// sign in email and password
+export const signInAuthEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
+
+  return await signInWithEmailAndPassword(auth, email, password);
 }

@@ -10,19 +10,28 @@ import Profile from './routes/Profile/profile'
 import Certificate from './routes/Certificate/certificate'
 import Receipt from './routes/Receipt/receipt'
 import Revenue from './routes/Revenue/revenue'
+import LoginPage from './routes/Login/login';
 
 import { setCertReducer } from './store/certReducer/certificate.reducer';
 import { setReceiptReducer } from './store/receiptReducer/receipt.reducer';
 import { setRevenueReducer } from './store/revenueReducer/revenue.reducer';
+import { setUsersReducer } from './store/userReducer/profile.reducer';
 
-import { getDocCert, getDocRevenue } from './utils/firebase';
-import { getDocReceipt } from './utils/firebase';
+import { getDocCert, getDocRevenue, getDocReceipt, getDocUserProfile } from './utils/firebase';
 
 function App() {
 
   const dispatch = useDispatch();
 
   useEffect(() => {
+
+    const users = async () => {
+      const qusers = await getDocUserProfile();
+      const qUsersList = [];
+      qusers.docs.forEach(element => qUsersList.push(element.data()))
+      dispatch(setUsersReducer(qUsersList))
+    }
+
     const certificates = async () => {
       const qcert = await getDocCert();
       const qCertList = []
@@ -43,18 +52,21 @@ function App() {
       qRevenue.docs.forEach(element => qRevenueList.push(element.data()))
       dispatch(setRevenueReducer(qRevenueList))
     }
-    certificates();
-    receipts();
-    revenue();
+
+    // users();
+    // certificates();
+    // receipts();
+    // revenue();
   }, [])
 
   return (
     <Routes>
-      <Route path='/' element={<Home />}>
+      <Route path='/' element={<LoginPage />} />
+      <Route path='/home' element={<Home />}>
         <Route index element={<Profile />} /> 
-        <Route path='/certificate' element={<Certificate />} />
-        <Route path='/receipt' element={<Receipt />} />
-        <Route path='/revenue' element={<Revenue />} />
+        <Route path='/home/certificate' element={<Certificate />} />
+        <Route path='/home/receipt' element={<Receipt />} />
+        <Route path='/home/revenue' element={<Revenue />} />
       </Route>
     </Routes>
   )
