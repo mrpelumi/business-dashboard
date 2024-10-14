@@ -13,6 +13,11 @@ import { useSelector } from "react-redux";
 import { FilterMatchMode } from 'primereact/api';
 
 const Certificate = () => {
+  const options = {
+    year: "numeric",
+    month:"long",
+    day: "numeric"
+  }
 
   const allCert = useSelector(selectCertItem);
   
@@ -40,6 +45,10 @@ const Certificate = () => {
     {
       field:"taxAppId",
       header:"Receipt ID"
+    },
+    {
+      field: "createdDate",
+      header: "Date Created"
     }
   ]
 
@@ -51,11 +60,14 @@ const Certificate = () => {
     const thisWeek = getISOWeek(today);
     const allCertList = []
 
-    // create cert list this is using receipt value
-    for (let element of Object.values(allCert)){
-      allCertList.push(element)
+    // create extensible cert object
+    const newAllCertObj = Object.assign({}, allCert)
+
+    for (let element of Object.values(newAllCertObj)){
+      const newElement = Object.assign({}, element)
+      newElement["createdDate"] = element.createdAt.toDate().toLocaleDateString("en-US", options)
+      allCertList.push(newElement)
     }
-    console.log(allCertList)
     // set month cert no
     const monthCertList = allCertList.filter(element => {
       const monthDateVal = element.createdAt.toDate()
@@ -95,28 +107,27 @@ const Certificate = () => {
   }
 
   return (
-    <div className='p-6 col-span-4 flex flex-col gap-6'>
+    <div className='p-6 col-span-4 flex flex-col gap-6 overflow-y-scroll w-full'>
       <div className="">
         <span className="text-3xl font-bold text-blue-950">CERTIFICATE</span>
       </div>
-      <div className="flex gap-20">
+      <div className="flex lg:flex-row flex-col lg:justify-between gap-3 sm:w-4/5 md:w-4/6 lg:w-full">
         <Card bgColor={"bg-cyan-600"} title={"Certificate This Month"} value={monthCertNo} />
         <Card bgColor={"bg-violet-700"} title={"Certificate This Week"} value={weekCertNo} />
         <Card bgColor={"bg-green-600"} title={"Certificate This Day"} value={dayCertNo} />
       </div>
-      <div className='flex justify-between'>
-          <div className='shadow-md p-4 rounded-md flex flex-col gap-3 w-1/6'>
-            <span className='text-sm text-gray-400 text-center'>Total Certificate</span>
-            <span className='text-2xl font-medium text-gray-800 text-center'>{totalCertNo}</span>
+      <div className='flex flex-col gap-3 sm:gap-0 sm:flex-row justify-between'>
+          <div className='shadow-md p-4 rounded-md flex flex-col gap-3 lg:w-1/6 md:w-2/6 sm:w-1/5 w-4/6'>
+            <span className='text-sm text-gray-400 sm:text-center'>Total Certificate</span>
+            <span className='text-2xl font-medium text-gray-800 sm:text-center'>{totalCertNo}</span>
           </div>
-          <div className='flex items-end px-4 gap-2'>
+          <div className='flex flex-col w-4/6 sm:w-full sm:flex-row sm:items-end sm:justify-end gap-2'>
             <SearchInput value={filters} onChangeHandler={inputSearchHandler} />
             <SearchButton onSubmitHandler={onSubmitHandler} />
           </div>
         </div>
         <div className='border-2 border-gray-400 rounded-md'>
           <Tables products={certItems} columns={columns} filters={filters} />
-          {/* <Button type="button" icon="pi pi-file" rounded onClick={() => exportCSV(false)} data-pr-tooltip="CSV" /> */}
         </div>
     </div>
   )

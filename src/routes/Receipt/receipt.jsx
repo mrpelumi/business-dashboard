@@ -105,28 +105,27 @@ const Receipt = () => {
   }
 
   return (
-    <div className='p-6 col-span-4 flex flex-col gap-6'>
+    <div className='p-6 col-span-4 flex flex-col gap-6  overflow-y-scroll w-full'>
     <div className="">
       <span className="text-3xl font-bold text-blue-950">RECEIPT</span>
     </div>
-    <div className="flex gap-20">
+    <div className="flex lg:flex-row flex-col gap-3 sm:w-4/5 md:w-4/6 lg:w-full justify-between">
       <Card bgColor={"bg-pink-600"} title={"Receipts This Month"} value={monthReceiptNo} /> 
       <Card bgColor={"bg-sky-700"} title={"Receipts This Week"} value={weekReceiptNo} /> 
       <Card bgColor={"bg-yellow-600"} title={"Receipts This Day"} value={dayReceiptNo} /> 
     </div>
-    <div className='flex justify-between'>
-        <div className='shadow-md p-4 rounded-md flex flex-col gap-3 w-1/6'>
-          <span className='text-sm text-gray-400 text-center'>Total Receipts</span>
-          <span className='text-2xl font-medium text-gray-800 text-center'>{totalReceiptNo}</span>
+    <div className='flex flex-col gap-3 sm:gap-0 sm:flex-row justify-between'>
+        <div className='shadow-md p-4 rounded-md flex flex-col gap-3 lg:w-1/6 md:w-2/6 sm:w-1/5 w-4/6'>
+          <span className='text-sm text-gray-400 sm:text-center'>Total Receipts</span>
+          <span className='text-2xl font-medium text-gray-800 sm:text-center'>{totalReceiptNo}</span>
         </div>
-        <div className='flex items-end px-4 gap-2'>
+        <div className='flex flex-col w-4/6 sm:w-full sm:flex-row sm:items-end sm:justify-end gap-2'>
           <SearchInput value={filters} onChangeHandler={inputSearchHandler} />
           <SearchButton onSubmitHandler={onSubmitHandler} />
         </div>
       </div>
       <div className='border-2 border-gray-400 rounded-md'>
         <Tables products={receiptItems} columns={columns} filters={filters} />
-        {/* <Button type="button" icon="pi pi-file" rounded onClick={() => exportCSV(false)} data-pr-tooltip="CSV" /> */}
       </div>
   </div>
   )

@@ -1,7 +1,7 @@
 import {initializeApp} from "firebase/app";
 // import { onAuthStateChanged, setPersistence, browserSessionPersistence } from "firebase/auth";
 import {getFirestore, collection, getDocs} from "firebase/firestore";
-import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
+import {getAuth, signInWithEmailAndPassword, signOut} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_SECURE_API_KEY,
@@ -58,4 +58,8 @@ export const signInAuthEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
 
   return await signInWithEmailAndPassword(auth, email, password);
+}
+
+export const signOutAuthUser = async () => {
+  return await signOut(auth);
 }

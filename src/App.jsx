@@ -53,7 +53,7 @@ function App() {
       dispatch(setRevenueReducer(qRevenueList))
     }
 
-    // users();
+    users();
     // certificates();
     // receipts();
     // revenue();

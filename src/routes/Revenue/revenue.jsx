@@ -65,7 +65,6 @@ const Revenue = () => {
     // set total revenue month
     const initialValue = 0
 
-    // total not a list in real firebase
     const totalMonthRevenue = monthRevenueList.filter((element) => element.paymentStatus === true).map(element => Number(element.total)).reduce((prevEl, nextEl) => prevEl + nextEl, initialValue)   
 
     // set week revenue no
@@ -131,16 +130,16 @@ const Revenue = () => {
 
 
   return (
-    <div className='p-6 col-span-4 flex flex-col gap-6'>
+    <div className='p-6 col-span-4 flex flex-col gap-2 w-full lg:w-full overflow-y-scroll md:h-full'>
     <div className="">
       <span className="text-3xl font-bold text-blue-950">REVENUE</span>
     </div>
-    <div className="flex gap-20 pb-10">
+    <div className="flex lg:flex-row flex-col gap-3 w-4/5 md:w-4/6 lg:w-full justify-between pb-10">
       <Card bgColor={"bg-blue-700"} title={"Revenue This Month"} value={`₦${monthRevenueAmount}`} />
       <Card bgColor={"bg-fuchsia-700"} title={"Revenue This Week"} value={`₦${weekRevenueAmount}`} />
       <Card bgColor={"bg-teal-600"} title={"Revenue This Day"} value={`₦${dayRevenueAmount}`} />
     </div>
-    <div className='h-25 border-2 border-gray rounded-md p-2'>
+    <div className='border-2 border-gray rounded-md p-2'>
       <h2 className="text-center font-bold text-blue-800 text-lg mb-4">Weekly Revenue Chart</h2>
       <BarChart chartData={chartData} />
     </div>

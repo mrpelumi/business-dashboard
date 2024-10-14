@@ -65,7 +65,6 @@ const Profile = () => {
     for (let element of Object.values(userProfilesObj)){
       allProfilesList.push(element)
     }
-
     setProfileItems(allProfilesList);
     setTotalProfileNo(allProfilesList.length)
   }, [])
@@ -81,8 +80,8 @@ const Profile = () => {
   }
 
   return (
-      <div className='p-6 col-span-4 flex flex-col gap-6'>
-        <div className='flex justify-between'>
+      <div className='p-6 col-span-4 flex flex-col gap-6 overflow-y-scroll w-full'>
+        <div className='flex flex-col gap-2 sm:gap-0 sm:flex-row justify-between'>
           <div className='flex flex-col gap-1'>
             <span className='font-medium text-2xl'>Welcome <span className='text-blue-700'>Admin</span></span>
             <span className='text-sm text-gray-400'>Ondo Business Premises Management Platform</span>
@@ -94,19 +93,18 @@ const Profile = () => {
         <div className=''>
           <span className='text-xl font-bold text-blue-950'>USERS</span>
         </div>
-        <div className='flex justify-between'>
-          <div className='shadow-md p-4 rounded-md flex flex-col gap-3 w-1/6'>
-            <span className='text-sm text-gray-400 text-center'>Total Users</span>
-            <span className='text-2xl font-medium text-gray-800 text-center'>{totalProfileNo}</span>
+        <div className='flex flex-col gap-3 sm:gap-0 sm:flex-row justify-between'>
+          <div className='shadow-md p-4 rounded-md flex flex-col gap-3 lg:w-1/6 md:w-2/6 sm:w-1/5 w-4/6'>
+            <span className='text-sm text-gray-400 sm:text-center'>Total Users</span>
+            <span className='text-2xl font-medium text-gray-800 sm:text-center'>{totalProfileNo}</span>
           </div>
-          <div className='flex items-end px-4 gap-2'>
+          <div className='flex flex-col w-4/6 sm:w-full sm:flex-row sm:items-end sm:justify-end gap-2'>
             <SearchInput value={filters} onChangeHandler={inputSearchHandler} />
             <SearchButton onSubmitHandler={onSubmitHandler} />
           </div>
         </div>
-        <div className='border-2 border-gray-400 rounded-md'>
+        <div className='border-2 border-gray-400 rounded-md flex flex-col'>
           <Tables products={profileItems} columns={columns} filters={filters}/>
-          {/* <Button type="button" icon="pi pi-file" rounded onClick={() => exportCSV(false)} data-pr-tooltip="CSV" /> */}
         </div>
       </div>
   )

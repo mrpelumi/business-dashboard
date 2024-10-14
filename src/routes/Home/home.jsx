@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 const Home = () => {
   return (
-    <div className='grid grid-cols-5 gap-2 h-screen'>
+    <div className='flex gap-2 h-dvh'>
       <Nav />
       <Outlet />
     </div>
