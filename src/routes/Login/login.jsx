@@ -1,7 +1,8 @@
-import yodaImg from "../../assets/yoda.jpg";
+import loginBg from '../../assets/login-bg.jpg';
 import {useForm} from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { signInAuthEmailAndPassword } from "../../utils/firebase";
+import ondoImg from "../../assets/ondo-logo.png";
 
 const LoginPage = () => {
   const {register, handleSubmit, setError, formState: {errors, isSubmitting}} = useForm();
@@ -9,7 +10,7 @@ const LoginPage = () => {
 
   const onSubmitHandler = async (data) => {
     const {email, password} = data;
-    if (email !== "buvencommunicationsltd@gmail.com"){
+    if (email !== import.meta.env.VITE_ADMIN_LOGIN_EMAIL){
       setError('root', {
         type: '400',
       })
@@ -28,9 +29,10 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-2 p-2 h-dvh">
-      <div className="pt-12 pb-10 px-40 flex flex-col gap-2">
+    <div className="flex flex-col md:grid md:grid-cols-2 gap-2 p-2 h-full md:h-dvh">
+      <div className="pt-12 md:pb-10 p-10 sm:p-16 lg:p-20 xl:p-32 flex flex-col gap-2">
         <div className="py-3">
+          {/* <span className="text-3xl text-blue-800"><img src={ondoImg} /></span> */}
           <span className="text-3xl text-blue-800">👌</span>
         </div>
         <div className="flex flex-col gap-2 py-4">
@@ -50,12 +52,12 @@ const LoginPage = () => {
             {errors.password && <p className="text-red-600 text-sm">{errors.password.message}</p>}
           </div>
           <div className="flex">
-            <button className="bg-blue-600 p-4 rounded-md w-full font-bold text-white" type="submit" disabled={isSubmitting}>{isSubmitting ? "Loading..." : "Log In"}</button>
+            <button className="bg-blue-600 p-4 rounded-md w-full font-bold text-white hover:bg-indigo-600" type="submit" disabled={isSubmitting}>{isSubmitting ? "Loading..." : "Log In"}</button>
           </div>
         </form>
       </div>
       {/* 2nd grid */}
-      <div className="bg-cover bg-center rounded-2xl relative p-2 overflow-hidden" style={{backgroundImage: `url(${yodaImg})`}}>
+      <div className="bg-cover bg-center rounded-2xl relative p-2 overflow-hidden hidden md:flex" style={{backgroundImage: `url(${loginBg})`}}>
         <div className="absolute inset-0 h-full bg-black opacity-50 z-10"></div>
         <div className="absolute inset-0 h-full text-white z-20 flex flex-col gap-2 justify-center items-center p-12">
           <span className="text-xl text-justify">{`"The effectiveness of data visualization can be gauged by its simplicity, relevancy, and its ability to hold the user's hand during their data discovery journey"`}</span>

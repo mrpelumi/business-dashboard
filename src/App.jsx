@@ -54,9 +54,9 @@ function App() {
     }
 
     users();
-    // certificates();
-    // receipts();
-    // revenue();
+    certificates();
+    receipts();
+    revenue();
   }, [])
 
   return (
