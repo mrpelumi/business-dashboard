@@ -2,7 +2,6 @@ import loginBg from '../../assets/login-bg.jpg';
 import {useForm} from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { signInAuthEmailAndPassword } from "../../utils/firebase";
-import ondoImg from "../../assets/ondo-logo.png";
 
 const LoginPage = () => {
   const {register, handleSubmit, setError, formState: {errors, isSubmitting}} = useForm();
@@ -58,7 +57,7 @@ const LoginPage = () => {
       </div>
       {/* 2nd grid */}
       <div className="bg-cover bg-center rounded-2xl relative p-2 overflow-hidden hidden md:flex" style={{backgroundImage: `url(${loginBg})`}}>
-        <div className="absolute inset-0 h-full bg-black opacity-50 z-10"></div>
+        <div className="absolute inset-0 h-full bg-black opacity-70 z-10"></div>
         <div className="absolute inset-0 h-full text-white z-20 flex flex-col gap-2 justify-center items-center p-12">
           <span className="text-xl text-justify">{`"The effectiveness of data visualization can be gauged by its simplicity, relevancy, and its ability to hold the user's hand during their data discovery journey"`}</span>
           <span className="text-lg items-right">{`- Jagat Saikia`}</span>
